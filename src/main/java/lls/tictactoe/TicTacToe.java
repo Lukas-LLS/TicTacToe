@@ -180,65 +180,18 @@ public class TicTacToe extends Application {
         moveAIEasy(aiStateType, fieldMap, imageX, imageO);
     }
 
+    @SuppressWarnings("OptionalGetWithoutIsPresent")
     private void moveAIUnbeatable (Tile.State aiStateType, Map<ImageView, Tile> fieldMap, Image imageX, Image imageO) {
-        long alreadyPerformedMoves = fieldMap.values().stream().filter(Tile::isOccupied).count();
-        if (alreadyPerformedMoves < 2) {
-            List<ImageView> imageViews = new ArrayList<>();
-            fieldMap.forEach((imageView, tile) -> imageViews.add(imageView));
-            imageViews.sort(Comparator.comparingInt(i -> fieldMap.get(i).getPosition()));
-            if (fieldMap.get(imageViews.get(4)).isNotOccupied()) {
-                performAIMove(aiStateType, fieldMap, imageX, imageO, imageViews.get(4));
-                return;
-            }
-            if (fieldMap.get(imageViews.get(0)).isNotOccupied()) {
-                performAIMove(aiStateType, fieldMap, imageX, imageO, imageViews.get(0));
-                return;
-            }
-            if (fieldMap.get(imageViews.get(2)).isNotOccupied()) {
-                performAIMove(aiStateType, fieldMap, imageX, imageO, imageViews.get(0));
-                return;
-            }
-            if (fieldMap.get(imageViews.get(6)).isNotOccupied()) {
-                performAIMove(aiStateType, fieldMap, imageX, imageO, imageViews.get(6));
-                return;
-            }
-            if (fieldMap.get(imageViews.get(8)).isNotOccupied()) {
-                performAIMove(aiStateType, fieldMap, imageX, imageO, imageViews.get(8));
-                return;
-            }
-        }
-        if (alreadyPerformedMoves < 4) {
-            int optionalMove = checkForWinningMove(fieldMap);
-            List<ImageView> imageViews = new ArrayList<>();
-            fieldMap.forEach((imageView, tile) -> imageViews.add(imageView));
-            imageViews.sort(Comparator.comparingInt(i -> fieldMap.get(i).getPosition()));
-            if (optionalMove != -1) {
-                performAIMove(aiStateType, fieldMap, imageX, imageO, imageViews.get(optionalMove));
-                return;
-            }
-            optionalMove = getTrapEvadingMoveOnSecondTurn(fieldMap, aiStateType);
-            if (optionalMove != -1) {
-                performAIMove(aiStateType, fieldMap, imageX, imageO, imageViews.get(optionalMove));
-                return;
-            }
-            if (fieldMap.get(imageViews.get(1)).isNotOccupied()) {
-                performAIMove(aiStateType, fieldMap, imageX, imageO, imageViews.get(1));
-                return;
-            }
-            if (fieldMap.get(imageViews.get(3)).isNotOccupied()) {
-                performAIMove(aiStateType, fieldMap, imageX, imageO, imageViews.get(3));
-                return;
-            }
-            if (fieldMap.get(imageViews.get(5)).isNotOccupied()) {
-                performAIMove(aiStateType, fieldMap, imageX, imageO, imageViews.get(5));
-                return;
-            }
-            if (fieldMap.get(imageViews.get(7)).isNotOccupied()) {
-                performAIMove(aiStateType, fieldMap, imageX, imageO, imageViews.get(7));
-                return;
-            }
-        }
-        moveAIMedium(aiStateType, fieldMap, imageX, imageO);
+        Tile.State playerState = Arrays.stream(Tile.State.values())
+                .filter(state -> !state.equals(Tile.State.NONE) && !state.equals(aiStateType))
+                .findAny().get();
+        int move = Minimax.getBestMove(this, fieldMap, playerState, aiStateType);
+
+        List<ImageView> imageViews = new ArrayList<>();
+        fieldMap.forEach((imageView, tile) -> imageViews.add(imageView));
+        imageViews.sort(Comparator.comparingInt(i -> fieldMap.get(i).getPosition()));
+
+        performAIMove(aiStateType, fieldMap, imageX, imageO, imageViews.get(move));
     }
 
     private void performAIMove (Tile.State aiStateType, Map<ImageView, Tile> fieldMap, Image imageX, Image imageO, ImageView targetImageView) {
@@ -354,7 +307,7 @@ public class TicTacToe extends Application {
         return -1;
     }
 
-    private Tile.State checkIfGameEnded (Map<ImageView, Tile> fieldMap) {
+    Tile.State checkIfGameEnded (Map<ImageView, Tile> fieldMap) {
         List<Tile> tiles = new ArrayList<>(fieldMap.values());
         tiles.sort(Comparator.comparingInt(Tile::getPosition));
 
@@ -381,32 +334,8 @@ public class TicTacToe extends Application {
         return Tile.State.NONE;
     }
 
-    private boolean isDraw (Map<ImageView, Tile> fieldMap) {
+    boolean isDraw (Map<ImageView, Tile> fieldMap) {
         return fieldMap.values().stream().noneMatch(Tile::isNotOccupied);
-    }
-
-    private int getTrapEvadingMoveOnSecondTurn (Map<ImageView, Tile> fieldMap, Tile.State aiStateType) {
-        List<Tile> targetTiles = new ArrayList<>(fieldMap.values());
-        targetTiles.removeIf(tile -> {
-            int pos = tile.getPosition();
-            return pos != 1 && pos != 3 && pos != 5 && pos != 7;
-        });
-
-        targetTiles.sort(Comparator.comparingInt(Tile::getPosition));
-
-        if (haveSameNotNoneState(targetTiles.get(0), targetTiles.get(1)) && !targetTiles.get(0).getState().equals(aiStateType)) {
-            return 0;
-        }
-        if (haveSameNotNoneState(targetTiles.get(0), targetTiles.get(2)) && !targetTiles.get(0).getState().equals(aiStateType)) {
-            return 2;
-        }
-        if (haveSameNotNoneState(targetTiles.get(1), targetTiles.get(3)) && !targetTiles.get(1).getState().equals(aiStateType)) {
-            return 6;
-        }
-        if (haveSameNotNoneState(targetTiles.get(2), targetTiles.get(3)) && !targetTiles.get(2).getState().equals(aiStateType)) {
-            return 8;
-        }
-        return -1;
     }
 
     private boolean haveSameNotNoneState (Tile t1, Tile t2) {
