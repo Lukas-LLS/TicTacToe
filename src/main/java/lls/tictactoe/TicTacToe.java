@@ -216,6 +216,11 @@ public class TicTacToe extends Application {
                 performAIMove(aiStateType, fieldMap, imageX, imageO, imageViews.get(optionalMove));
                 return;
             }
+            optionalMove = getTrapEvadingMoveOnSecondTurn(fieldMap, aiStateType);
+            if (optionalMove != -1) {
+                performAIMove(aiStateType, fieldMap, imageX, imageO, imageViews.get(optionalMove));
+                return;
+            }
             if (fieldMap.get(imageViews.get(1)).isNotOccupied()) {
                 performAIMove(aiStateType, fieldMap, imageX, imageO, imageViews.get(1));
                 return;
@@ -378,6 +383,30 @@ public class TicTacToe extends Application {
 
     private boolean isDraw (Map<ImageView, Tile> fieldMap) {
         return fieldMap.values().stream().noneMatch(Tile::isNotOccupied);
+    }
+
+    private int getTrapEvadingMoveOnSecondTurn (Map<ImageView, Tile> fieldMap, Tile.State aiStateType) {
+        List<Tile> targetTiles = new ArrayList<>(fieldMap.values());
+        targetTiles.removeIf(tile -> {
+            int pos = tile.getPosition();
+            return pos != 1 && pos != 3 && pos != 5 && pos != 7;
+        });
+
+        targetTiles.sort(Comparator.comparingInt(Tile::getPosition));
+
+        if (haveSameNotNoneState(targetTiles.get(0), targetTiles.get(1)) && !targetTiles.get(0).getState().equals(aiStateType)) {
+            return 0;
+        }
+        if (haveSameNotNoneState(targetTiles.get(0), targetTiles.get(2)) && !targetTiles.get(0).getState().equals(aiStateType)) {
+            return 2;
+        }
+        if (haveSameNotNoneState(targetTiles.get(1), targetTiles.get(3)) && !targetTiles.get(1).getState().equals(aiStateType)) {
+            return 6;
+        }
+        if (haveSameNotNoneState(targetTiles.get(2), targetTiles.get(3)) && !targetTiles.get(2).getState().equals(aiStateType)) {
+            return 8;
+        }
+        return -1;
     }
 
     private boolean haveSameNotNoneState (Tile t1, Tile t2) {
