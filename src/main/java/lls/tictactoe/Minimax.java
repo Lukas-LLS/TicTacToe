@@ -53,7 +53,6 @@ public class Minimax {
         }
 
         valueLookupList.sort((entry1, entry2) -> Integer.compare(entry2.getValue(), entry1.getValue()));
-        System.out.println(valueLookupList.get(0).getValue());
 
         return caseLookupMap.get(valueLookupList.get(0).getKey());
     }
