@@ -62,7 +62,7 @@
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-fxml</artifactId>
-            <version>14</version>
+            <version>20.0.1</version>
         </dependency>
     </dependencies>
 
