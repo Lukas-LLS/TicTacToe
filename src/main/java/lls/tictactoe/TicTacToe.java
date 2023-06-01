@@ -14,12 +14,12 @@ import java.util.*;
 
 public class TicTacToe extends Application {
 
-    private static final Random rnd = new Random();
+    private static final Random RANDOM = new Random();
 
     private Stage stage;
 
     @Override
-    public void start (Stage stage) {
+    public void start(Stage stage) {
 
         this.stage = stage;
 
@@ -48,7 +48,7 @@ public class TicTacToe extends Application {
         stage.show();
     }
 
-    private void preGame2 (Stage stage, Difficulty difficulty) {
+    private void preGame2(Stage stage, Difficulty difficulty) {
 
         Label typeSelectionLabel = new Label("Choose your symbol:");
         Button typeSelectionX = new Button("X");
@@ -71,10 +71,10 @@ public class TicTacToe extends Application {
         stage.setScene(preScene2);
     }
 
-    private void startGame (Stage stage, Difficulty difficulty, Tile.State playerStateType, Tile.State aiStateType) {
-        Image imageX = new Image(getClass().getResourceAsStream("/assets/X.png"));
-        Image imageO = new Image(getClass().getResourceAsStream("/assets/O.png"));
-        Image imageNone = new Image(getClass().getResourceAsStream("/assets/NONE.png"));
+    private void startGame(Stage stage, Difficulty difficulty, Tile.State playerStateType, Tile.State aiStateType) {
+        Image imageX = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/X.png")));
+        Image imageO = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/O.png")));
+        Image imageNone = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/NONE.png")));
 
         Map<ImageView, Tile> fieldMap = new HashMap<>();
 
@@ -91,20 +91,19 @@ public class TicTacToe extends Application {
                 currentImageView.setOnMouseClicked(e -> {
                     if (currentTile.changeState(playerStateType)) {
                         switch (currentTile.getState()) {
-                            case X:
+                            case X -> {
                                 currentImageView.setImage(imageX);
-                            {
-                                if (potentialGameEnd(fieldMap)) return;
+                                {
+                                    if (potentialGameEnd(fieldMap)) return;
+                                }
                             }
-                            break;
-                            case O:
+                            case O -> {
                                 currentImageView.setImage(imageO);
-                            {
-                                if (potentialGameEnd(fieldMap)) return;
+                                {
+                                    if (potentialGameEnd(fieldMap)) return;
+                                }
                             }
-                            break;
-                            default:
-                                throw new IllegalStateException("Tile was change, but state is NONE");
+                            default -> throw new IllegalStateException("Tile was change, but state is NONE");
                         }
                         moveAI(difficulty, aiStateType, fieldMap, imageX, imageO);
                     }
@@ -120,7 +119,7 @@ public class TicTacToe extends Application {
         }
     }
 
-    private boolean potentialGameEnd (Map<ImageView, Tile> fieldMap) {
+    private boolean potentialGameEnd(Map<ImageView, Tile> fieldMap) {
         Tile.State endState = checkIfGameEnded(fieldMap);
         if (!endState.equals(Tile.State.NONE)) {
             endGame(fieldMap, endState);
@@ -133,26 +132,19 @@ public class TicTacToe extends Application {
         return false;
     }
 
-    private void moveAI (Difficulty difficulty, Tile.State aiStateType, Map<ImageView, Tile> fieldMap,
-                         Image imageX, Image imageO) {
+    private void moveAI(Difficulty difficulty, Tile.State aiStateType, Map<ImageView, Tile> fieldMap,
+                        Image imageX, Image imageO) {
 
         switch (difficulty) {
-            case EASY:
-                moveAIEasy(aiStateType, fieldMap, imageX, imageO);
-                break;
-            case MEDIUM:
-                moveAIMedium(aiStateType, fieldMap, imageX, imageO);
-                break;
-            case UNBEATABLE:
-                moveAIUnbeatable(aiStateType, fieldMap, imageX, imageO);
-                break;
-            default:
-                throw new NullPointerException("Difficulty was null");
+            case EASY -> moveAIEasy(aiStateType, fieldMap, imageX, imageO);
+            case MEDIUM -> moveAIMedium(aiStateType, fieldMap, imageX, imageO);
+            case UNBEATABLE -> moveAIUnbeatable(aiStateType, fieldMap, imageX, imageO);
+            default -> throw new NullPointerException("Difficulty was null");
         }
 
     }
 
-    private void moveAIEasy (Tile.State aiStateType, Map<ImageView, Tile> fieldMap, Image imageX, Image imageO) {
+    private void moveAIEasy(Tile.State aiStateType, Map<ImageView, Tile> fieldMap, Image imageX, Image imageO) {
         List<ImageView> freeTiles = new ArrayList<>();
         fieldMap.forEach((imageView, tile) -> {
             if (tile.isNotOccupied()) {
@@ -160,12 +152,12 @@ public class TicTacToe extends Application {
             }
         });
         if (freeTiles.isEmpty()) return;
-        ImageView targetImageView = freeTiles.get(rnd.nextInt(freeTiles.size()));
+        ImageView targetImageView = freeTiles.get(RANDOM.nextInt(freeTiles.size()));
 
         performAIMove(aiStateType, fieldMap, imageX, imageO, targetImageView);
     }
 
-    private void moveAIMedium (Tile.State aiStateType, Map<ImageView, Tile> fieldMap, Image imageX, Image imageO) {
+    private void moveAIMedium(Tile.State aiStateType, Map<ImageView, Tile> fieldMap, Image imageX, Image imageO) {
         List<ImageView> imageViews = new ArrayList<>();
         fieldMap.forEach((imageView, tile) -> imageViews.add(imageView));
         int move = checkForWinningMove(fieldMap);
@@ -181,7 +173,7 @@ public class TicTacToe extends Application {
     }
 
     @SuppressWarnings("OptionalGetWithoutIsPresent")
-    private void moveAIUnbeatable (Tile.State aiStateType, Map<ImageView, Tile> fieldMap, Image imageX, Image imageO) {
+    private void moveAIUnbeatable(Tile.State aiStateType, Map<ImageView, Tile> fieldMap, Image imageX, Image imageO) {
         Tile.State playerState = Arrays.stream(Tile.State.values())
                 .filter(state -> !state.equals(Tile.State.NONE) && !state.equals(aiStateType))
                 .findAny().get();
@@ -194,57 +186,37 @@ public class TicTacToe extends Application {
         performAIMove(aiStateType, fieldMap, imageX, imageO, imageViews.get(move));
     }
 
-    private void performAIMove (Tile.State aiStateType, Map<ImageView, Tile> fieldMap, Image imageX, Image imageO, ImageView targetImageView) {
+    private void performAIMove(Tile.State aiStateType, Map<ImageView, Tile> fieldMap, Image imageX, Image imageO, ImageView targetImageView) {
         if (!fieldMap.get(targetImageView).changeState(aiStateType)) {
             throw new IllegalStateException("Tile which was not occupied, is now suddenly occupied");
         }
         switch (fieldMap.get(targetImageView).getState()) {
-            case X:
-                targetImageView.setImage(imageX);
-            {
-                Tile.State endState = checkIfGameEnded(fieldMap);
-                if (!endState.equals(Tile.State.NONE)) {
-                    endGame(fieldMap, endState);
-                }
-                if (isDraw(fieldMap)) {
-                    endGame(fieldMap, Tile.State.NONE);
-                }
-            }
-            break;
-            case O:
-                targetImageView.setImage(imageO);
-            {
-                Tile.State endState = checkIfGameEnded(fieldMap);
-                if (!endState.equals(Tile.State.NONE)) {
-                    endGame(fieldMap, endState);
-                }
-                if (isDraw(fieldMap)) {
-                    endGame(fieldMap, Tile.State.NONE);
-                }
-            }
-            break;
-            default:
-                throw new IllegalStateException("Tile was changed, but state is NONE");
+            case O -> performMoveForAIState(fieldMap, imageO, targetImageView);
+            case X -> performMoveForAIState(fieldMap, imageX, targetImageView);
+            default -> throw new IllegalStateException("Tile was change, but state is NONE");
         }
     }
 
-    private void endGame (Map<ImageView, Tile> fieldMap, Tile.State endState) {
-
-        String winnerText;
-
-        switch (endState) {
-            case X:
-                winnerText = "X won";
-                break;
-            case O:
-                winnerText = "O won";
-                break;
-            case NONE:
-                winnerText = "Draw";
-                break;
-            default:
-                throw new IllegalStateException("Unexpected value: " + endState);
+    private void performMoveForAIState(Map<ImageView, Tile> fieldMap, Image imageX, ImageView targetImageView) {
+        targetImageView.setImage(imageX);
+        {
+            Tile.State endState = checkIfGameEnded(fieldMap);
+            if (!endState.equals(Tile.State.NONE)) {
+                endGame(fieldMap, endState);
+            }
+            if (isDraw(fieldMap)) {
+                endGame(fieldMap, Tile.State.NONE);
+            }
         }
+    }
+
+    private void endGame(Map<ImageView, Tile> fieldMap, Tile.State endState) {
+
+        String winnerText = switch (endState) {
+            case X -> "X won";
+            case O -> "O won";
+            case NONE -> "Draw";
+        };
 
         Label winnerLabel = new Label(winnerText);
         Button rematchButton = new Button("Rematch");
@@ -280,7 +252,7 @@ public class TicTacToe extends Application {
         stage.setScene(endScene);
     }
 
-    private int checkForWinningMove (Map<ImageView, Tile> fieldMap) {
+    private int checkForWinningMove(Map<ImageView, Tile> fieldMap) {
         List<Tile> tiles = new ArrayList<>(fieldMap.values());
         tiles.sort(Comparator.comparingInt(Tile::getPosition));
 
@@ -307,7 +279,7 @@ public class TicTacToe extends Application {
         return -1;
     }
 
-    Tile.State checkIfGameEnded (Map<ImageView, Tile> fieldMap) {
+    public Tile.State checkIfGameEnded(Map<ImageView, Tile> fieldMap) {
         List<Tile> tiles = new ArrayList<>(fieldMap.values());
         tiles.sort(Comparator.comparingInt(Tile::getPosition));
 
@@ -334,11 +306,11 @@ public class TicTacToe extends Application {
         return Tile.State.NONE;
     }
 
-    boolean isDraw (Map<ImageView, Tile> fieldMap) {
+    public boolean isDraw(Map<ImageView, Tile> fieldMap) {
         return fieldMap.values().stream().noneMatch(Tile::isNotOccupied);
     }
 
-    private boolean haveSameNotNoneState (Tile t1, Tile t2) {
+    private boolean haveSameNotNoneState(Tile t1, Tile t2) {
         if (t1.getState().equals(Tile.State.NONE)) return false;
         return t1.getState().equals(t2.getState());
     }

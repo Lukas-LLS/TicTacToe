@@ -3,11 +3,10 @@ package lls.tictactoe;
 import javafx.scene.image.ImageView;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class Minimax {
 
-    public static int getBestMove (TicTacToe instance, Map<ImageView, Tile> fieldMap, Tile.State playerStateType, Tile.State aiStateType) {
+    public static int getBestMove(TicTacToe instance, Map<ImageView, Tile> fieldMap, Tile.State playerStateType, Tile.State aiStateType) {
 
         List<Map<ImageView, Tile>> possibleChases = new ArrayList<>();
 
@@ -17,7 +16,7 @@ public class Minimax {
                 .entrySet()
                 .stream()
                 .filter(entry -> entry.getValue().isNotOccupied())
-                .collect(Collectors.toList());
+                .toList();
 
         for (int i = 0; i < emptyPositions.size(); i++) {
             Map<ImageView, Tile> currentMapCopy = new HashMap<>();
@@ -58,7 +57,7 @@ public class Minimax {
     }
 
 
-    private static int minimax (TicTacToe instance, Type type, Map<ImageView, Tile> fieldMapCopy, Tile.State playerStateType, Tile.State aiStateType) {
+    private static int minimax(TicTacToe instance, Type type, Map<ImageView, Tile> fieldMapCopy, Tile.State playerStateType, Tile.State aiStateType) {
         Tile.State possibleEndState = instance.checkIfGameEnded(fieldMapCopy);
         if (possibleEndState.equals(playerStateType)) return -1;
         if (possibleEndState.equals(aiStateType)) return 1;
@@ -70,7 +69,7 @@ public class Minimax {
                 .entrySet()
                 .stream()
                 .filter(entry -> entry.getValue().isNotOccupied())
-                .collect(Collectors.toList());
+                .toList();
 
         for (int i = 0; i < emptyPositions.size(); i++) {
             Map<ImageView, Tile> currentMapCopy = new HashMap<>();
@@ -119,30 +118,30 @@ public class Minimax {
         private final K key;
         private V value;
 
-        public EntryImpl (K key, V value) {
+        public EntryImpl(K key, V value) {
             this.key = Objects.requireNonNull(key);
             this.value = Objects.requireNonNull(value);
         }
 
         @Override
-        public K getKey () {
+        public K getKey() {
             return key;
         }
 
         @Override
-        public V getValue () {
+        public V getValue() {
             return value;
         }
 
         @Override
-        public V setValue (V value) {
+        public V setValue(V value) {
             V oldValue = this.value;
             this.value = value;
             return oldValue;
         }
 
         @Override
-        public boolean equals (Object o) {
+        public boolean equals(Object o) {
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
             EntryImpl<?, ?> entry = (EntryImpl<?, ?>) o;
@@ -151,12 +150,12 @@ public class Minimax {
         }
 
         @Override
-        public int hashCode () {
+        public int hashCode() {
             return Objects.hashCode(key) ^ Objects.hashCode(value);
         }
 
         @Override
-        public String toString () {
+        public String toString() {
             return key + "->" + value;
         }
     }

@@ -4,46 +4,46 @@ import java.util.Objects;
 
 public class Tile implements Cloneable {
 
-    private State state;
     private final int position;
+    private State state;
 
-    public Tile (int position) {
+    public Tile(int position) {
         this.state = State.NONE;
         this.position = position;
     }
 
-    public boolean changeState (State newState) {
+    public boolean changeState(State newState) {
         if (isOccupied() || newState == null) return false;
         state = newState;
         return true;
     }
 
-    public boolean isOccupied () {
+    public boolean isOccupied() {
         return !state.equals(State.NONE);
     }
 
-    public boolean isNotOccupied () {
+    public boolean isNotOccupied() {
         return state.equals(State.NONE);
     }
 
-    public State getState () {
+    public State getState() {
         return state;
     }
 
-    public int getPosition () {
+    public int getPosition() {
         return position;
     }
 
     @SuppressWarnings("MethodDoesntCallSuperMethod")
     @Override
-    public Tile clone () {
+    public Tile clone() {
         Tile clone = new Tile(position);
         clone.changeState(state);
         return clone;
     }
 
     @Override
-    public boolean equals (Object o) {
+    public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Tile tile = (Tile) o;
@@ -52,12 +52,12 @@ public class Tile implements Cloneable {
     }
 
     @Override
-    public int hashCode () {
+    public int hashCode() {
         return Objects.hash(state, position);
     }
 
     @Override
-    public String toString () {
+    public String toString() {
         return "Tile{" +
                 "state=" + state.name() +
                 ", position=" + position +
