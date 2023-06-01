@@ -1,0 +1,14 @@
+name: Qodana Code Quality Check
+
+on: [ push ]
+
+jobs:
+  analyze:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Run Qodana
+        uses: JetBrains/qodana-action@v2023.1.1
