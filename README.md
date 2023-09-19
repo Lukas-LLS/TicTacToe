@@ -4,7 +4,7 @@
 
 This is a implementation of TicTacToe written in Java using the JavaFX library.
 
-There are 3 possible difficulties:
+There are three possible difficulties:
 
 - Easy
 - Medium
@@ -23,4 +23,4 @@ mvn package
 
 The jar file will be located in the `target` directory.
 > Note: You need to have maven and java 17 installed on your system.
-> There will be 2 jar files in the target directory, you should use the one with dependencies.
+> There will be two jar files in the target directory, you should use the one with dependencies.
