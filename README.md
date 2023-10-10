@@ -22,5 +22,5 @@ mvn package
 ```
 
 The jar file will be located in the `target` directory.
-> Note: You need to have maven and java 17 installed on your system.
+> Note: You need to have maven and java 21 installed on your system.
 > There will be two jar files in the target directory, you should use the one with dependencies.
