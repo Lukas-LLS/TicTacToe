@@ -241,9 +241,9 @@ public class TicTacToe extends Application {
 
         for (int i = 0; i < 3; i++) {
             for (int j = 1; j < 4; j++) {
-                layout.add(imageViews.get(0), i, j);
-                imageViews.get(0).setOnMouseClicked(null);
-                imageViews.remove(0);
+                layout.add(imageViews.getFirst(), i, j);
+                imageViews.getFirst().setOnMouseClicked(null);
+                imageViews.removeFirst();
             }
         }
 
@@ -296,7 +296,7 @@ public class TicTacToe extends Application {
         }
 
         if (haveSameNotNoneState(tiles.get(0), tiles.get(4)) && haveSameNotNoneState(tiles.get(0), tiles.get(8))) {
-            return tiles.get(0).getState();
+            return tiles.getFirst().getState();
         }
 
         if (haveSameNotNoneState(tiles.get(2), tiles.get(4)) && haveSameNotNoneState(tiles.get(2), tiles.get(6))) {
