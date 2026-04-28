@@ -37,9 +37,9 @@ public class TicTacToe extends Application {
         Button difficultySelectionUnbeatable = new Button("Unbeatable");
 
         // Set actions for the difficulty buttons to set up the game with the selected difficulty
-        difficultySelectionEasy.setOnAction(e -> gameSetup(stage, Difficulty.EASY));
-        difficultySelectionMedium.setOnAction(e -> gameSetup(stage, Difficulty.MEDIUM));
-        difficultySelectionUnbeatable.setOnAction(e -> gameSetup(stage, Difficulty.UNBEATABLE));
+        difficultySelectionEasy.setOnAction(_ -> gameSetup(stage, Difficulty.EASY));
+        difficultySelectionMedium.setOnAction(_ -> gameSetup(stage, Difficulty.MEDIUM));
+        difficultySelectionUnbeatable.setOnAction(_ -> gameSetup(stage, Difficulty.UNBEATABLE));
 
         // Create and configure the layout for the difficulty selection screen
         GridPane layout = new GridPane();
@@ -76,8 +76,8 @@ public class TicTacToe extends Application {
         Button typeSelectionO = new Button("O");
 
         // Set actions for the buttons to start the game with the selected symbol
-        typeSelectionX.setOnAction(e -> startGame(stage, difficulty, Tile.State.X, Tile.State.O));
-        typeSelectionO.setOnAction(e -> startGame(stage, difficulty, Tile.State.O, Tile.State.X));
+        typeSelectionX.setOnAction(_ -> startGame(stage, difficulty, Tile.State.X, Tile.State.O));
+        typeSelectionO.setOnAction(_ -> startGame(stage, difficulty, Tile.State.O, Tile.State.X));
 
         // Create and configure the layout for the symbol selection screen
         GridPane layout = new GridPane();
@@ -122,7 +122,7 @@ public class TicTacToe extends Application {
                 final Tile currentTile = new Tile((i == 0 ? 0 : (i == 1 ? 3 : 6)) + j);
                 fieldMap.put(currentImageView, currentTile);
                 layout.add(currentImageView, i, j);
-                currentImageView.setOnMouseClicked(e -> {
+                currentImageView.setOnMouseClicked(_ -> {
                     // Handle player move
                     if (currentTile.changeState(playerStateType)) {
                         switch (currentTile.getState()) {
@@ -241,7 +241,7 @@ public class TicTacToe extends Application {
     private void moveAIMedium(Tile.State aiStateType, Map<ImageView, Tile> fieldMap, Image imageX, Image imageO) {
         // Create a list of ImageViews from the fieldMap
         List<ImageView> imageViews = new ArrayList<>();
-        fieldMap.forEach((imageView, tile) -> imageViews.add(imageView));
+        fieldMap.forEach((imageView, _) -> imageViews.add(imageView));
 
         // Check for a winning move
         int move = checkForWinningMove(fieldMap);
@@ -281,7 +281,7 @@ public class TicTacToe extends Application {
 
         // Create a list of ImageViews from the fieldMap
         List<ImageView> imageViews = new ArrayList<>();
-        fieldMap.forEach((imageView, tile) -> imageViews.add(imageView));
+        fieldMap.forEach((imageView, _) -> imageViews.add(imageView));
 
         // Sort the ImageViews by their position on the board
         imageViews.sort(Comparator.comparingInt(i -> fieldMap.get(i).getPosition()));
@@ -359,8 +359,8 @@ public class TicTacToe extends Application {
         Button exitButton = new Button("Exit");
 
         // Set actions for the buttons
-        rematchButton.setOnAction(e -> start(stage));
-        exitButton.setOnAction(e -> stage.close());
+        rematchButton.setOnAction(_ -> start(stage));
+        exitButton.setOnAction(_ -> stage.close());
 
         // Create and configure the layout for the end game screen
         GridPane layout = new GridPane();
@@ -376,7 +376,7 @@ public class TicTacToe extends Application {
 
         // Collect and sort the ImageViews from the field map
         List<ImageView> imageViews = new ArrayList<>();
-        fieldMap.forEach((imageView, tile) -> imageViews.add(imageView));
+        fieldMap.forEach((imageView, _) -> imageViews.add(imageView));
         imageViews.sort(Comparator.comparingInt(imageView -> fieldMap.get(imageView).getPosition()));
 
         // Add the ImageViews to the layout and disable their click actions
